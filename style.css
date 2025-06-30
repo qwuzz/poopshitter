@@ -1,0 +1,256 @@
+body {
+    font-family: 'Century Gothic', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    display: flex;
+    min-height: 100vh;
+    background-image: url('https://f2.toyhou.se/file/f2-toyhou-se/images/77698377_S8keJx0Vvh3fBiL.png');
+    background-repeat: repeat;
+    background-size: auto;
+    background-color: #ff0000;
+
+
+}
+
+
+/*sidebars*/
+.sidebar-left, .sidebar-right {
+    padding: 10px;
+    box-sizing: border-box;
+    width: 90%;
+    max-width: 300px;
+    height: auto;
+    flex-shrink: 1;
+    
+
+}
+
+.sidebar-left {
+    width: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid #ccc;
+}
+
+.sidebar-left img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.sidebar-right {
+    border-left: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/*main*/
+.main-content {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.intro-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    min-height: 60vh;
+    text-align: center;
+    
+}
+
+.intro-box header p {
+    max-width: 600px;
+    line-height: 1.5;
+    background-color: #ff0000;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    color: white;
+
+}
+
+header {
+    text-align: center;
+    margin-top: 40px;
+    background-color: #ff0000;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+    color: white;
+}
+
+header h1 {
+    font-size: 3rem;
+    margin: 0 auto;
+}
+
+header h2 {
+    font-size: 1.5rem;
+    margin: 0 auto;
+}
+
+
+
+.socials {
+    display: inline-block;
+    margin: 5px 10px;
+    text-decoration: none;
+}
+
+.socials a {
+    transition: text-shadow 0.5s ease;
+    text-decoration: none;
+    color: white;
+}
+
+.socials a {
+    animation: rainbow 2s infinite;
+    text-shadow: 0px 0px 10px;
+}
+
+@keyframes rainbow {
+    0%   { color: #ff0000; text-shadow: 0px 0px 5px #ff0000; }
+    10%  { color: #ff8000; text-shadow: 0px 0px 5px #ff8000; }
+    20%  { color: #ffff00; text-shadow: 0px 0px 5px #ffff00; }
+    30%  { color: #80ff00; text-shadow: 0px 0px 5px #80ff00; }
+    40%  { color: #00ff00; text-shadow: 0px 0px 5px #00ff00; }
+    50%  { color: #00ff80; text-shadow: 0px 0px 5px #00ff80; }
+    60%  { color: #00ffff; text-shadow: 0px 0px 5px #00ffff; }
+    70%  { color: #0080ff; text-shadow: 0px 0px 5px #0080ff; }
+    80%  { color: #0000ff; text-shadow: 0px 0px 5px #0000ff; }
+    90%  { color: #8000ff; text-shadow: 0px 0px 5px #8000ff; }
+    100% { color: #ff0080; text-shadow: 0px 0px 5px #ff0080; }
+}
+
+.blinkies, .stamps {
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.blinkies img, .stamps img {
+    margin: 0;
+}
+
+
+/*menu*/
+.menu {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    text-align: right;
+}
+
+.menu button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Century Gothic', sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+    width: 100%;
+    
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 5px 0;
+    background: rgb(255, 0, 0);
+    border-radius: 5px;
+    border: 2px solid white;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 150px;
+    display: none;
+}
+
+.menu ul.visible {
+    display: block;
+    font-size: 3.4vmin;
+    text-align:left;
+}
+
+.menu ul li a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: white;
+    font-family: 'Century Gothic', sans-serif
+}
+
+.menu ul li a:hover {
+    background-color: #ff8080;
+}
+ #menu-toggle {
+    font-size: 4.4vmin;
+}
+#generate-code {
+    background-color: #ff0000;
+    color: white;
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 3.2rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#generate-code:hover {
+    background-color:#ff8080;
+}
+
+#code-result {
+    margin-top: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+  
+    .sidebar-left,
+    .sidebar-right {
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      order: 2;
+    }
+  
+    .main-content {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      order: 1;
+    }
+  
+    .box, .header-box {
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  
+  }
