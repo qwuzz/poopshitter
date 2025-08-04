@@ -40,6 +40,19 @@ body {
     margin: 0 auto;
 }
 
+#visitor-counter {
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 14px;
+    color: #00ff00;
+    background: #000000;
+    border: 2px solid #00ff00;
+    padding: 6px 12px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #00ff00;
+    width: max-content;
+    user-select: none;
+}
+
 .sidebar-right {
     border-left: 1px solid #ccc;
     display: flex;
