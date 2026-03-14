@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ADMIN</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <style>
+        .admin-page { width: 100%; max-width: 860px; margin: 0 auto; padding-bottom: 50px; display: flex; flex-direction: column; gap: 20px; }
+
+        .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-height: 40vh; }
+        .login-box { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 30px 40px; text-align: center; color: white; display: flex; flex-direction: column; gap: 14px; }
+        .login-box h2 { margin: 0; font-size: 1.2rem; }
+        .login-box p { margin: 0; font-size: 0.88rem; opacity: 0.85; }
+        .google-btn { display: inline-flex; align-items: center; gap: 10px; background: white; color: #ff0000; font-family: 'Century Gothic', sans-serif; font-weight: bold; font-size: 0.95rem; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; }
+        .google-btn:hover { background: #ffd0d0; }
+        .google-btn img { width: 20px; height: 20px; }
+
+        .admin-content { display: none; flex-direction: column; gap: 20px; }
+        .admin-content.visible { display: flex; }
+
+        .section-header { background: #ff0000; color: white; border: 3px solid white; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+        .section-header h2 { margin: 0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.07em; }
+
+        .slots-control { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 20px; color: white; display: flex; flex-direction: column; gap: 14px; }
+        .slots-current { font-size: 1.4rem; font-weight: bold; text-align: center; }
+        .slots-current span { font-size: 2rem; }
+        .slots-row { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+        .slots-input { font-family: 'Century Gothic', sans-serif; font-size: 1rem; padding: 8px 12px; border-radius: 5px; border: 2px solid white; background: white; color: #ff0000; width: 80px; text-align: center; }
+        .admin-btn { background: white; color: #ff0000; font-family: 'Century Gothic', sans-serif; font-weight: bold; font-size: 0.88rem; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; }
+        .admin-btn:hover { background: #ffd0d0; }
+        .admin-btn.danger { background: #ff0000; color: white; border: 2px solid white; }
+        .admin-btn.danger:hover { background: #cc0000; }
+
+        .admin-card { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 18px 20px; color: white; display: flex; flex-direction: column; gap: 12px; }
+        .admin-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+        .admin-card-title { font-size: 1rem; font-weight: bold; }
+        .admin-card-title span { font-size: 0.82rem; opacity: 0.7; font-weight: normal; display: block; margin-top: 2px; }
+        .admin-card-meta { font-size: 0.82rem; line-height: 1.7; opacity: 0.9; }
+        .admin-card-meta a { color: white; }
+        .meta-row { display: flex; gap: 6px; }
+        .meta-label { font-weight: bold; min-width: 90px; flex-shrink: 0; }
+
+        .status-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .status-select { font-family: 'Century Gothic', sans-serif; font-size: 0.85rem; padding: 6px 10px; border-radius: 5px; border: 2px solid white; background: white; color: #ff0000; }
+
+        .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: bold; color: white; }
+        .badge-not_started       { background: #666; }
+        .badge-sketching         { background: #e67e22; }
+        .badge-lining            { background: #8e44ad; }
+        .badge-coloring          { background: #2980b9; }
+        .badge-awaiting_approval { background: #27ae60; }
+        .badge-delivered         { background: #1a1a1a; }
+
+        .save-msg { font-size: 0.8rem; opacity: 0.8; }
+
+        .logout-btn { background: none; border: 2px solid white; color: white; font-family: 'Century Gothic', sans-serif; font-size: 0.82rem; padding: 6px 12px; border-radius: 5px; cursor: pointer; }
+        .logout-btn:hover { background: rgba(255,255,255,0.1); }
+
+        .empty-msg { text-align: center; color: white; padding: 30px; font-size: 0.95rem; opacity: 0.8; }
+
+        @media (max-width: 600px) {
+            .login-box { padding: 20px; }
+            .slots-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <button id="menu-toggle">☰ menu</button>
+        <ul id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="invite.html">Free Toyhouse Codes</a></li>
+            <li><a href="tos.html">Terms of Service</a></li>
+            <li><a href="commissions.html">Commissions</a></li>
+            <li><a href="queue.html">Commission Queue</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="intro-box">
+            <header>
+                <h1>Admin Panel</h1>
+                <h2>for managing my commissions</h2>
+            </header>
+        </div>
+
+        <div class="admin-page">
+
+            <div class="login-screen" id="login-screen">
+                <div class="login-box">
+                    <h2><i class="fa-solid fa-lock"></i> restricted!!!</h2>
+                    <p>this page is for me only!! sign in with ur google account to continue.</p>
+                    <button class="google-btn" id="google-login-btn">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"/>
+                        sign in with google
+                    </button>
+                </div>
+            </div>
+
+            <!-- admin content -->
+            <div class="admin-content" id="admin-content">
+
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-gauge"></i> dashboard</h2>
+                    <button class="logout-btn" id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> sign out</button>
+                </div>
+
+                <!-- slots control -->
+                <div class="slots-control">
+                    <div class="slots-current">open slots: <span id="slots-display">—</span></div>
+                    <div class="slots-row">
+                        <button class="admin-btn" id="slots-dec">− remove slot</button>
+                        <input type="number" class="slots-input" id="slots-input" min="0" max="10" value="0"/>
+                        <button class="admin-btn" id="slots-inc">+ add slot</button>
+                    </div>
+                    <div style="text-align:center;">
+                        <button class="admin-btn" id="slots-save">save slot count</button>
+                        <p class="save-msg" id="slots-msg"></p>
+                    </div>
+                </div>
+
+                <!-- commissions list -->
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-list"></i> active commissions</h2>
+                </div>
+                <div id="admin-queue"></div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

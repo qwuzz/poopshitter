@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TO-DO LIST</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <style>
+        .queue-page { width: 100%; max-width: 860px; margin: 0 auto; padding-bottom: 50px; display: flex; flex-direction: column; gap: 20px; }
+
+        .legend { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: white; font-weight: bold; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+        .status-banner { background: white; color: #ff0000; border: 3px solid #ff0000; border-radius: 8px; padding: 14px 20px; text-align: center; font-weight: bold; font-size: 1rem; }
+        .status-banner .slot-count { font-size: 1.4rem; display: block; margin-top: 4px; }
+        .status-banner.closed { background: #ff0000; color: white; border-color: white; }
+
+        .queue-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .queue-empty { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 30px; text-align: center; color: white; font-size: 1rem; }
+        .queue-empty i { font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.7; }
+
+        .q-card { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 16px 20px; color: white; display: flex; align-items: center; gap: 16px; }
+        .q-position { font-size: 1.6rem; font-weight: bold; opacity: 0.4; min-width: 32px; text-align: center; flex-shrink: 0; }
+        .q-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .q-name { font-size: 1rem; font-weight: bold; }
+        .q-type { font-size: 0.84rem; opacity: 0.88; }
+        .q-date { font-size: 0.75rem; opacity: 0.6; margin-top: 2px; }
+        .q-status { flex-shrink: 0; }
+
+        .badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: bold; color: white; white-space: nowrap; }
+        .badge i { font-size: 0.75rem; }
+
+        .badge-not_started      { background: #666; }
+        .badge-sketching        { background: #e67e22; }
+        .badge-lining           { background: #8e44ad; }
+        .badge-coloring         { background: #2980b9; }
+        .badge-awaiting_approval{ background: #27ae60; }
+        .badge-delivered        { background: #1a1a1a; }
+
+        .dot-not_started      { background: #666; }
+        .dot-sketching        { background: #e67e22; }
+        .dot-lining           { background: #8e44ad; }
+        .dot-coloring         { background: #2980b9; }
+        .dot-awaiting_approval{ background: #27ae60; }
+
+        .loading-msg { color: white; text-align: center; padding: 30px; font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            .q-card { flex-wrap: wrap; }
+            .q-status { width: 100%; }
+            .badge { width: 100%; justify-content: center; }
+            .legend { gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <button id="menu-toggle">☰ menu</button>
+        <ul id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="invite.html">Free Toyhouse Codes</a></li>
+            <li><a href="tos.html">Terms of Service</a></li>
+            <li><a href="commissions.html">Commissions</a></li>
+            <li><a href="queue.html">Commission Queue</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="intro-box">
+            <header>
+                <h1>Commission To-Do List</h1>
+                <h2>this is my queue of commissions i'm working on rn! :P</h2>
+            </header>
+        </div>
+
+        <div class="queue-page">
+
+            <!-- slots banner -->
+            <div class="status-banner" id="slots-banner">
+                <span>loading...</span>
+            </div>
+
+            <!-- status legend -->
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot dot-not_started"></div> Not Started</div>
+                <div class="legend-item"><div class="legend-dot dot-sketching"></div> Sketching</div>
+                <div class="legend-item"><div class="legend-dot dot-lining"></div> Lining</div>
+                <div class="legend-item"><div class="legend-dot dot-coloring"></div> Coloring / Rendering</div>
+                <div class="legend-item"><div class="legend-dot dot-awaiting_approval"></div> Awaiting Approval</div>
+            </div>
+
+            <!-- queue -->
+            <div class="queue-list" id="queue-list">
+                <div class="loading-msg"><i class="fa-solid fa-spinner fa-spin"></i> loading queue...</div>
+            </div>
+
+            <!-- link to commissions -->
+            <div style="text-align:center;">
+                <a href="commissions.html" style="color:white; font-size:0.9rem;">
+                    <i class="fa-solid fa-arrow-left"></i> back to commissions
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+    (() => {
+        const WORKER = 'https://commissions.aishuhariharan123.workers.dev';
+
+        const STATUS_LABELS = {
+            not_started:       'Not Started',
+            sketching:         'Sketching',
+            lining:            'Lining',
+            coloring:          'Coloring / Rendering',
+            awaiting_approval: 'Awaiting Approval',
+            delivered:         'Delivered',
+        };
+
+        const STATUS_ICONS = {
+            not_started:       'fa-clock',
+            sketching:         'fa-pencil',
+            lining:            'fa-pen-nib',
+            coloring:          'fa-palette',
+            awaiting_approval: 'fa-eye',
+            delivered:         'fa-box',
+        };
+
+        const slotsBanner = document.getElementById('slots-banner');
+        const queueList   = document.getElementById('queue-list');
+
+        function formatDate(iso) {
+            return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function renderCard(commission, position) {
+            const { characterName, commissionType, animated, status, submittedAt } = commission;
+            const label = STATUS_LABELS[status] ?? status;
+            const icon  = STATUS_ICONS[status]  ?? 'fa-circle';
+            const animTag = animated ? ' <span style="opacity:0.7;font-size:0.78rem;">(animated)</span>' : '';
+
+            return `
+                <div class="q-card">
+                    <div class="q-position">#${position}</div>
+                    <div class="q-info">
+                        <div class="q-name">${characterName}</div>
+                        <div class="q-type">${commissionType}${animTag}</div>
+                        <div class="q-date">submitted ${formatDate(submittedAt)}</div>
+                    </div>
+                    <div class="q-status">
+                        <span class="badge badge-${status}">
+                            <i class="fa-solid ${icon}"></i> ${label}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadQueue() {
+            try {
+                const [slotsRes, queueRes] = await Promise.all([
+                    fetch(`${WORKER}/slots`),
+                    fetch(`${WORKER}/queue`),
+                ]);
+                const { slots }  = await slotsRes.json();
+                const { queue }  = await queueRes.json();
+
+                if (slots > 0) {
+                    slotsBanner.innerHTML = `<i class="fa-solid fa-circle-check"></i> commissions are <strong>OPEN!</strong><span class="slot-count">${slots} slot${slots !== 1 ? 's' : ''} available</span>`;
+                    slotsBanner.classList.remove('closed');
+                } else {
+                    slotsBanner.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> commissions are <strong>CLOSED</strong> right now — check back soon!`;
+                    slotsBanner.classList.add('closed');
+                }
+
+                if (!queue || queue.length === 0) {
+                    queueList.innerHTML = `
+                        <div class="queue-empty">
+                            <i class="fa-solid fa-inbox"></i>
+                            the queue is empty right now — nothing in progress!
+                        </div>`;
+                } else {
+                    queueList.innerHTML = queue.map((c, i) => renderCard(c, i + 1)).join('');
+                }
+
+            } catch (e) {
+                queueList.innerHTML = `<div class="queue-empty"><i class="fa-solid fa-triangle-exclamation"></i> couldn't load the queue — try refreshing!</div>`;
+                console.error(e);
+            }
+        }
+
+        loadQueue();
+    })();
+    </script>
+</body>
+</html>
