@@ -50,7 +50,7 @@
                 token = d.token;
                 sessionStorage.setItem('admin_token', token);
             } else {
-                showLogin('login failed — please try again.');
+                showLogin('login failed! only i can access this panel.');
                 return;
             }
         }
