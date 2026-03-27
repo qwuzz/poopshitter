@@ -118,13 +118,13 @@
         showLogin();
     });
 
-
+    // slots
     const slotsDisplay = document.getElementById('slots-display');
     const slotsInput   = document.getElementById('slots-input');
     const slotsMsg     = document.getElementById('slots-msg');
 
     async function loadSlots() {
-        const r = await fetch(`${WORKER}/slots`);
+        const r = await fetch(`${COMM_WORKER}/slots`);
         const d = await r.json();
         slotsDisplay.textContent = d.slots;
         slotsInput.value = d.slots;
@@ -141,11 +141,11 @@
     document.getElementById('slots-save').addEventListener('click', async () => {
         const slots = parseInt(slotsInput.value);
         if (isNaN(slots) || slots < 0) return;
-        const r = await fetch(`${WORKER}/admin/set-slots`, {
+        const r = await fetch(`${COMM_WORKER}/admin/set-slots`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${commToken}`
             },
             body: JSON.stringify({ slots })
         });
@@ -156,11 +156,12 @@
         }
     });
 
+    // commissions
     const adminQueue = document.getElementById('admin-queue');
 
     async function loadCommissions() {
-        const r = await fetch(`${WORKER}/admin/commissions`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const r = await fetch(`${COMM_WORKER}/admin/commissions`, {
+            headers: { 'Authorization': `Bearer ${commToken}` }
         });
         const d = await r.json();
         renderCommissions(d.commissions || []);
@@ -172,17 +173,17 @@
             adminQueue.innerHTML = `<p class="empty-msg">no active commissions right now!</p>`;
             return;
         }
-        adminQueue.innerHTML = active.map(c => renderCard(c)).join('');
+        adminQueue.innerHTML = active.map(c => renderCommCard(c)).join('');
 
         adminQueue.querySelectorAll('.status-select').forEach(sel => {
             sel.addEventListener('change', async () => {
                 const id  = sel.dataset.id;
                 const msg = sel.closest('.admin-card').querySelector('.save-msg');
-                const r = await fetch(`${WORKER}/admin/update-status`, {
+                const r = await fetch(`${COMM_WORKER}/admin/update-status`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${commToken}`
                     },
                     body: JSON.stringify({ id, status: sel.value })
                 });
@@ -207,18 +208,16 @@
         });
     }
 
-    function renderCard(c) {
+    function renderCommCard(c) {
         const icon  = STATUS_ICONS[c.status] ?? 'fa-circle';
         const label = STATUS_LABELS[c.status] ?? c.status;
         const animTag = c.animated ? ' (animated)' : '';
         const payLabel = c.paymentMethod === 'paypal' ? 'PayPal email'
                        : c.paymentMethod === 'cashapp' ? 'CashApp'
                        : 'Venmo';
-
         const options = Object.entries(STATUS_LABELS).map(([val, lbl]) =>
             `<option value="${val}" ${c.status === val ? 'selected' : ''}>${lbl}</option>`
         ).join('');
-
         return `
             <div class="admin-card">
                 <div class="admin-card-header">
@@ -239,10 +238,11 @@
                     <select class="status-select" data-id="${c.id}">${options}</select>
                     <span class="save-msg"></span>
                 </div>
-            </div>
-        `;
+            </div>`;
     }
-const fanartAdmin = document.getElementById('fanart-admin');
+
+    // fanart
+    const fanartAdmin = document.getElementById('fanart-admin');
 
     async function loadFanart() {
         const r = await fetch(`${FANART_WORKER}/admin/fanart`, {
@@ -301,6 +301,7 @@ const fanartAdmin = document.getElementById('fanart-admin');
         } else { msg.textContent = '✗ failed'; }
     };
 
+    // suggestions
     const suggestionsAdmin = document.getElementById('suggestions-admin');
 
     async function loadSuggestions() {
@@ -336,7 +337,6 @@ const fanartAdmin = document.getElementById('fanart-admin');
             setTimeout(() => loadSuggestions(), 1000);
         } else { msg.textContent = '✗ failed'; }
     };
-
 
     init();
 })();
