@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>SEND ME STUFF</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <style>
+        .sub-page { width: 100%; max-width: 860px; margin: 0 auto; padding-bottom: 50px; display: flex; flex-direction: column; gap: 28px; }
+
+        /* section headers */
+        .section-header { background: #ff0000; color: white; border: 3px solid white; border-radius: 8px; padding: 12px 18px; text-align: center; }
+        .section-header h2 { margin: 0; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.07em; }
+        .section-header p { margin: 6px 0 0; font-size: 0.88rem; opacity: 0.9; }
+
+        /* suggestion box */
+        .suggestion-area { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+        .box-scene { position: relative; width: 220px; height: 200px; cursor: pointer; user-select: none; flex-shrink: 0; }
+
+        /* box body */
+        .box-body { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 180px; height: 130px; background: #ff0000; border: 3px solid white; border-radius: 6px; }
+        .box-body::before { 
+            content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 6px; background: white; border-radius: 3px;
+        }
+        .box-label { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-family: 'Century Gothic', sans-serif; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+
+        /* paper sticking out */
+        .box-paper { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 70px; height: 90px; background: white; border-radius: 3px 3px 0 0; transition: top 0.35s cubic-bezier(.34,1.56,.64,1), height 0.35s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; pointer-events: none; }
+        .box-paper .paper-lines { display: flex; flex-direction: column; gap: 5px; width: 50px; }
+        .box-paper .paper-lines span { display: block; height: 2px; background: #ff0000; border-radius: 2px; opacity: 0.4; }
+        .box-paper .paper-lines span:nth-child(2) { width: 70%; }
+        .box-paper .paper-lines span:nth-child(3) { width: 50%; }
+
+        .box-scene:hover .box-paper { top: -10px; }
+        .box-scene.submitting .box-paper { top: 30px; height: 20px; transition: top 0.4s ease, height 0.4s ease; }
+        .box-scene.submitted .box-paper { top: 30px; height: 0; transition: top 0.3s ease, height 0.3s ease; }
+
+        .box-hint { color: white; font-size: 0.82rem; text-align: center; opacity: 0.85; }
+
+        /* suggestion form */
+        .suggestion-form-wrap { width: 100%; max-width: 560px; }
+        .suggestion-form { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .suggestion-form textarea { font-family: 'Century Gothic', sans-serif; font-size: 0.88rem; padding: 10px; border-radius: 5px; border: 2px solid white; background: white; color: #ff0000; resize: vertical; min-height: 100px; width: 100%; box-sizing: border-box; }
+        .suggestion-form textarea:focus { outline: 3px solid #ffd0d0; }
+        .char-count { font-size: 0.76rem; color: white; opacity: 0.7; text-align: right; }
+        .char-count.over { opacity: 1; font-weight: bold; color: #ffd0d0; }
+        .sub-btn { background: white; color: #ff0000; font-family: 'Century Gothic', sans-serif; font-weight: bold; font-size: 0.95rem; padding: 10px; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .sub-btn:hover:not(:disabled) { background: #ffd0d0; }
+        .sub-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .sub-msg { text-align: center; color: white; font-size: 0.88rem; min-height: 18px; }
+
+        /* fanart form */
+        .fanart-form { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+        .field-group { display: flex; flex-direction: column; gap: 5px; }
+        .field-group label { color: white; font-size: 0.88rem; font-weight: bold; }
+        .field-group input, .field-group textarea {
+            font-family: 'Century Gothic', sans-serif; font-size: 0.88rem;
+            padding: 8px 10px; border-radius: 5px; border: 2px solid white;
+            background: white; color: #ff0000; width: 100%; box-sizing: border-box;
+        }
+        .field-group textarea { resize: vertical; min-height: 70px; }
+        .field-group input:focus, .field-group textarea:focus { outline: 3px solid #ffd0d0; }
+        .optional-tag { font-weight: normal; opacity: 0.7; font-size: 0.8rem; }
+
+        .drop-zone { border: 3px dashed white; border-radius: 8px; padding: 24px; text-align: center; color: white; cursor: pointer; transition: background 0.2s; position: relative; }
+        .drop-zone:hover, .drop-zone.dragover { background: rgba(255,255,255,0.1); }
+        .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+        .drop-zone i { font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.8; }
+        .drop-zone p { margin: 0; font-size: 0.86rem; opacity: 0.9; }
+        .drop-zone .file-name { font-size: 0.82rem; margin-top: 8px; opacity: 0.75; font-style: italic; }
+        .drop-preview { max-width: 100%; max-height: 200px; border-radius: 5px; display: none; margin: 10px auto 0; }
+
+        .fanart-submit-btn { background: white; color: #ff0000; font-family: 'Century Gothic', sans-serif; font-weight: bold; font-size: 0.95rem; padding: 10px; border: none; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .fanart-submit-btn:hover:not(:disabled) { background: #ffd0d0; }
+        .fanart-submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .fanart-msg { text-align: center; color: white; font-size: 0.88rem; min-height: 18px; }
+
+        /* gallery  */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+        .gallery-item { position: relative; border-radius: 8px; overflow: hidden; border: 3px solid white; aspect-ratio: 1; cursor: pointer; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-tooltip { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,0,0,0.88); color: white; font-size: 0.78rem; font-weight: bold; padding: 6px 8px; text-align: center; transform: translateY(100%); transition: transform 0.2s; pointer-events: none; }
+        .gallery-item:hover .gallery-tooltip { transform: translateY(0); }
+        .gallery-empty { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 30px; text-align: center; color: white; }
+        .gallery-empty i { font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.7; }
+
+        /* lightbox */
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+        .lightbox.open { display: flex; }
+        .lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 8px; border: 3px solid white; }
+        .lightbox-credit { color: white; font-size: 0.9rem; font-weight: bold; }
+        .lightbox-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+
+        @media (max-width: 600px) {
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .box-scene { width: 160px; height: 160px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="menu">
+        <button id="menu-toggle">☰ menu</button>
+        <ul id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="invite.html">Free Toyhouse Codes</a></li>
+            <li><a href="submission.html">Fanart/Video Suggestions</a></li>
+            <li><a href="tos.html">Terms of Service</a></li>
+            <li><a href="commissions.html">Commissions</a></li>
+            <li><a href="queue.html">Commission Queue</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="intro-box">
+            <header>
+                <h1>SUBMIT THINGS</h1>
+                <h2>want to see your art at the end of a future video? have an idea of something you want me to talk about? send fanart and video ideas here! :3    </h2>
+            </header>
+        </div>
+
+        <div class="sub-page">
+
+            <!-- suggestion box -->
+            <div class="section-header">
+                <h2><i class="fa-solid fa-lightbulb"></i> Suggestions</h2>
+                <p>tell me what u wanna see next! it's...hard to come up with ideas sometimes so your help is greatly appreciated</p>
+            </div>
+
+            <div class="suggestion-area">
+                <div class="box-scene" id="box-scene" title="click to drop a suggestion!">
+                    <div class="box-paper">
+                        <div class="paper-lines">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="box-label">send here =^-^=</div>
+                    </div>
+                </div>
+                <p class="box-hint" id="box-hint">click the paper to send an idea >.<</p>
+
+                <div class="suggestion-form-wrap" id="suggestion-form-wrap" style="display:none;">
+                    <div class="suggestion-form">
+                        <textarea id="suggestion-text" placeholder="what's your idea? (max 500 characters)" maxlength="500"></textarea>
+                        <div class="char-count" id="char-count">0 / 500</div>
+                        <button class="sub-btn" id="suggestion-submit" disabled>SEND</button>
+                        <p class="sub-msg" id="suggestion-msg"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fanart submission -->
+            <div class="section-header">
+                <h2><i class="fa-solid fa-heart"></i> Fanart</h2>
+                <p>gift art is always loved and appreciated! i like to feature fanart at the ends of my videos :3</p>
+            </div>
+
+            <div class="fanart-form">
+                <div class="field-group">
+                    <label for="credit-name">Name *</label>
+                    <input type="text" id="credit-name" placeholder="name or handle name you go by, to display on endcard"/>
+                </div>
+                <div class="field-group">
+                    <label for="website-link">Promo Link <span class="optional-tag">(optional)</span></label>
+                    <input type="url" id="website-link" placeholder="toyhouse, twitter, etc. used for toyhouse crediting"/>
+                </div>
+                <div class="field-group">
+                    <label for="fanart-message">Message <span class="optional-tag">(optional)</span></label>
+                    <textarea id="fanart-message" placeholder="if there's anything else you wanna add or say :3"></textarea>
+                </div>
+                <div class="field-group">
+                    <label>Fanart Image *</label>
+                    <div class="drop-zone" id="drop-zone">
+                        <input type="file" id="fanart-file" accept="image/jpeg,image/png,image/gif,image/webp"/>
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>click or drag and drop your image here!</p>
+                        <p style="font-size:0.75rem; opacity:0.65;">jpg, png, gif, webp. max 10MB</p>
+                        <div class="file-name" id="file-name"></div>
+                    </div>
+                    <img class="drop-preview" id="drop-preview" alt="preview"/>
+                </div>
+                <button class="fanart-submit-btn" id="fanart-submit" disabled>submit!!</button>
+                <p class="fanart-msg" id="fanart-msg"></p>
+            </div>
+
+            <!-- gallery -->
+            <div class="section-header">
+                <h2><i class="fa-solid fa-images"></i> Fanart Gallery</h2>
+                <p>gift art people have already sent in! hover over a piece to see who made it :3 i will approve any appropriate artwork sent above to be displayed here</p>
+            </div>
+            <div class="gallery-grid" id="gallery-grid">
+                <div class="gallery-empty"><i class="fa-solid fa-spinner fa-spin"></i> loading gallery...</div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightbox-close"><i class="fa-solid fa-xmark"></i></button>
+        <img id="lightbox-img" src="" alt=""/>
+        <div class="lightbox-credit" id="lightbox-credit"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="submissions.js"></script>
+</body>
+</html>
