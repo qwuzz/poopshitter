@@ -1,5 +1,6 @@
 (() => {
-    const WORKER = 'https://commissions.aishuhariharan123.workers.dev';
+    const COMM_WORKER   = 'https://commissions.aishuhariharan123.workers.dev';
+    const FANART_WORKER = 'https://fanart.aishuhariharan123.workers.dev';
 
     const STATUS_LABELS = {
         not_started:       'Not Started',
