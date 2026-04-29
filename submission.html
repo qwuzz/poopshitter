@@ -6,41 +6,31 @@
     <title>SEND ME STUFF</title>
     <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <style>
-        .sub-page { width: 100%; max-width: 860px; margin: 0 auto; padding-bottom: 50px; display: flex; flex-direction: column; gap: 28px; }
+        .sub-page { width: 100%; max-width: 860px; margin: 0 auto; padding-bottom: 80px; display: flex; flex-direction: column; gap: 28px; }
 
-        /* section headers */
         .section-header { background: #ff0000; color: white; border: 3px solid white; border-radius: 8px; padding: 12px 18px; text-align: center; }
         .section-header h2 { margin: 0; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.07em; }
         .section-header p { margin: 6px 0 0; font-size: 0.88rem; opacity: 0.9; }
 
-        /* suggestion box */
         .suggestion-area { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 
         .box-scene { position: relative; width: 220px; height: 200px; cursor: pointer; user-select: none; flex-shrink: 0; }
-
-        /* box body */
         .box-body { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 180px; height: 130px; background: #ff0000; border: 3px solid white; border-radius: 6px; }
-        .box-body::before { 
-            content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 6px; background: white; border-radius: 3px;
-        }
+        .box-body::before { content: ''; position: absolute; top: -3px; left: 50%; transform: translateX(-50%); width: 80px; height: 6px; background: white; border-radius: 3px; }
         .box-label { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: white; font-family: 'Century Gothic', sans-serif; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
-
-        /* paper sticking out */
         .box-paper { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 70px; height: 90px; background: white; border-radius: 3px 3px 0 0; transition: top 0.35s cubic-bezier(.34,1.56,.64,1), height 0.35s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; pointer-events: none; }
         .box-paper .paper-lines { display: flex; flex-direction: column; gap: 5px; width: 50px; }
         .box-paper .paper-lines span { display: block; height: 2px; background: #ff0000; border-radius: 2px; opacity: 0.4; }
         .box-paper .paper-lines span:nth-child(2) { width: 70%; }
         .box-paper .paper-lines span:nth-child(3) { width: 50%; }
-
         .box-scene:hover .box-paper { top: -10px; }
         .box-scene.submitting .box-paper { top: 30px; height: 20px; transition: top 0.4s ease, height 0.4s ease; }
         .box-scene.submitted .box-paper { top: 30px; height: 0; transition: top 0.3s ease, height 0.3s ease; }
 
         .box-hint { color: white; font-size: 0.82rem; text-align: center; opacity: 0.85; }
 
-        /* suggestion form */
         .suggestion-form-wrap { width: 100%; max-width: 560px; }
         .suggestion-form { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .suggestion-form textarea { font-family: 'Century Gothic', sans-serif; font-size: 0.88rem; padding: 10px; border-radius: 5px; border: 2px solid white; background: white; color: #ff0000; resize: vertical; min-height: 100px; width: 100%; box-sizing: border-box; }
@@ -52,15 +42,10 @@
         .sub-btn:disabled { opacity: 0.45; cursor: not-allowed; }
         .sub-msg { text-align: center; color: white; font-size: 0.88rem; min-height: 18px; }
 
-        /* fanart form */
         .fanart-form { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 22px; display: flex; flex-direction: column; gap: 14px; }
         .field-group { display: flex; flex-direction: column; gap: 5px; }
         .field-group label { color: white; font-size: 0.88rem; font-weight: bold; }
-        .field-group input, .field-group textarea {
-            font-family: 'Century Gothic', sans-serif; font-size: 0.88rem;
-            padding: 8px 10px; border-radius: 5px; border: 2px solid white;
-            background: white; color: #ff0000; width: 100%; box-sizing: border-box;
-        }
+        .field-group input, .field-group textarea { font-family: 'Century Gothic', sans-serif; font-size: 0.88rem; padding: 8px 10px; border-radius: 5px; border: 2px solid white; background: white; color: #ff0000; width: 100%; box-sizing: border-box; }
         .field-group textarea { resize: vertical; min-height: 70px; }
         .field-group input:focus, .field-group textarea:focus { outline: 3px solid #ffd0d0; }
         .optional-tag { font-weight: normal; opacity: 0.7; font-size: 0.8rem; }
@@ -78,7 +63,6 @@
         .fanart-submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
         .fanart-msg { text-align: center; color: white; font-size: 0.88rem; min-height: 18px; }
 
-        /* gallery  */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
         .gallery-item { position: relative; border-radius: 8px; overflow: hidden; border: 3px solid white; aspect-ratio: 1; cursor: pointer; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.25s; }
@@ -88,12 +72,13 @@
         .gallery-empty { background: #ff0000; border: 3px solid white; border-radius: 8px; padding: 30px; text-align: center; color: white; }
         .gallery-empty i { font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.7; }
 
-        /* lightbox */
         .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
         .lightbox.open { display: flex; }
         .lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 8px; border: 3px solid white; }
         .lightbox-credit { color: white; font-size: 0.9rem; font-weight: bold; }
         .lightbox-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+
+        .turnstile-wrap { display: flex; justify-content: center; margin: 4px 0; }
 
         @media (max-width: 600px) {
             .gallery-grid { grid-template-columns: repeat(2, 1fr); }
@@ -118,7 +103,7 @@
         <div class="intro-box">
             <header>
                 <h1>SUBMIT THINGS</h1>
-                <h2>want to see your art at the end of a future video? have an idea of something you want me to talk about? send fanart and video ideas here! :3    </h2>
+                <h2>want to see your art at the end of a future video? have an idea of something you want me to talk about? send fanart and video ideas here! :3</h2>
             </header>
         </div>
 
@@ -147,6 +132,7 @@
                     <div class="suggestion-form">
                         <textarea id="suggestion-text" placeholder="what's your idea? (max 500 characters)" maxlength="500"></textarea>
                         <div class="char-count" id="char-count">0 / 500</div>
+                        <div class="turnstile-wrap" id="sugg-turnstile-container"></div>
                         <button class="sub-btn" id="suggestion-submit" disabled>SEND</button>
                         <p class="sub-msg" id="suggestion-msg"></p>
                     </div>
@@ -183,6 +169,7 @@
                     </div>
                     <img class="drop-preview" id="drop-preview" alt="preview"/>
                 </div>
+                <div class="turnstile-wrap" id="fanart-turnstile-container"></div>
                 <button class="fanart-submit-btn" id="fanart-submit" disabled>submit!!</button>
                 <p class="fanart-msg" id="fanart-msg"></p>
             </div>
@@ -206,7 +193,90 @@
         <div class="lightbox-credit" id="lightbox-credit"></div>
     </div>
 
+    <!-- sticky bottom bar -->
+    <div class="bottom-bar">
+        <a href="changelog.html" class="bottom-bar-link"><i class="fa-solid fa-clock-rotate-left"></i> changelog</a>
+        <a href="admin.html" class="bottom-bar-link bottom-bar-admin">admin</a>
+    </div>
+
     <script src="script.js"></script>
     <script src="submissions.js"></script>
+    <script>
+    (() => {
+        const TURNSTILE_SITEKEY = '0x4AAAAAADF3EDMEB2Rbqpba';
+        let suggToken = null;
+        let fanartToken = null;
+        let suggWidgetRendered = false;
+
+        function waitForTurnstile(cb) {
+            if (typeof turnstile !== 'undefined') { cb(); return; }
+            setTimeout(() => waitForTurnstile(cb), 100);
+        }
+
+        // render fanart turnstile immediately
+        waitForTurnstile(() => {
+            turnstile.render('#fanart-turnstile-container', {
+                sitekey: TURNSTILE_SITEKEY,
+                theme: 'dark',
+                callback: (token) => {
+                    fanartToken = token;
+                    checkFanartReady();
+                },
+                'expired-callback': () => { fanartToken = null; document.getElementById('fanart-submit').disabled = true; },
+                'error-callback':   () => { fanartToken = null; document.getElementById('fanart-submit').disabled = true; }
+            });
+        });
+
+        // render suggestion turnstile when form opens
+        const origBoxClick = document.getElementById('box-scene').onclick;
+        document.getElementById('box-scene').addEventListener('click', () => {
+            if (suggWidgetRendered) return;
+            suggWidgetRendered = true;
+            waitForTurnstile(() => {
+                turnstile.render('#sugg-turnstile-container', {
+                    sitekey: TURNSTILE_SITEKEY,
+                    theme: 'dark',
+                    callback: (token) => {
+                        suggToken = token;
+                        updateSuggSubmit();
+                    },
+                    'expired-callback': () => { suggToken = null; document.getElementById('suggestion-submit').disabled = true; },
+                    'error-callback':   () => { suggToken = null; document.getElementById('suggestion-submit').disabled = true; }
+                });
+            });
+        });
+
+        function updateSuggSubmit() {
+            const len = document.getElementById('suggestion-text').value.length;
+            document.getElementById('suggestion-submit').disabled = len === 0 || len > 500 || !suggToken;
+        }
+
+        // patch suggestion text listener to also check token
+        document.getElementById('suggestion-text').addEventListener('input', updateSuggSubmit);
+
+        // patch suggestion submit to include token
+        const origSuggSubmit = document.getElementById('suggestion-submit');
+        origSuggSubmit.addEventListener('click', (e) => {
+            if (!suggToken) { e.stopImmediatePropagation(); return; }
+            window._suggTurnstileToken = suggToken;
+        }, true); // capture phase, runs before submissions.js handler
+
+        // patch fanart submit to include token
+        document.getElementById('fanart-submit').addEventListener('click', (e) => {
+            if (!fanartToken) { e.stopImmediatePropagation(); return; }
+            window._fanartTurnstileToken = fanartToken;
+        }, true);
+
+        function checkFanartReady() {
+            const hasFile = !!window._selectedFile;
+            const hasName = !!(document.getElementById('credit-name').value || '').trim();
+            document.getElementById('fanart-submit').disabled = !hasFile || !hasName || !fanartToken;
+        }
+
+        // expose checkFanartReady for submissions.js
+        window._checkFanartReady = checkFanartReady;
+        document.getElementById('credit-name').addEventListener('input', checkFanartReady);
+    })();
+    </script>
 </body>
 </html>

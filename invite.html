@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>TOYHOUSE CODES GET YER TOYHOUSE CODES</title>
-        <link rel="stylesheet" href="style.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <link rel="stylesheet" href="style.css"/>
+        <script src="script.js" defer></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdab/2wNKA5BbxNdQ1EebBCaE1Wq/1lNGxfORVW0gxm0a0UWQOT6QyBMNnFMqDGaM3iA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     </head>
 
     <body class="invitepage">
@@ -20,21 +24,21 @@
             </ul>
         </nav>
 
-
         <main class="main-content">
             <div class="intro-box">
                 <header>
                     <h1>TOYHOUSE CODE GENERATOR</h1>
-                    <h2>you can use this generator to access a toyhouse code to allow you to create an account on the site. when you press it, a code will be generated below.
-                    </h2>
+                    <h2>you can use this generator to access a toyhouse code to allow you to create an account on the site. when you press it, a code will be generated below.</h2>
                 </header>
-               <button id="generate-code">generate!!!</button>
+                <div id="turnstile-container" style="margin: 16px auto; display: flex; justify-content: center;"></div>
+                <button id="generate-code" disabled>generate!!!</button>
                 <p id="code-result" class="red-box"></p>
             </div>
             <div>
                 <h1>please avoid pressing that button if you don't need a code/just for fun! :P i know it's fun to click big red buttons but i have to manually add unused codes back into the pool lol</h1>
             </div>
         </main>
+
         <aside class="sidebar-right">
             <h1>THANK YOU TO THE FOLLOWING CODE PROVIDERS:</h1>
             <p>
@@ -61,19 +65,75 @@
                 <a href="https://toyhou.se/plushcowz">@Waywarden</a> - (7)
             </p>
         </aside>
+
+        <!-- sticky bottom bar -->
+        <div class="bottom-bar">
+            <a href="changelog.html" class="bottom-bar-link"><i class="fa-solid fa-clock-rotate-left"></i> changelog</a>
+            <a href="admin.html" class="bottom-bar-link bottom-bar-admin">admin</a>
+        </div>
+
         <script src="script.js"></script>
+        <script>
+        (() => {
+            let turnstileToken = null;
+
+            function initTurnstile() {
+                if (typeof turnstile === 'undefined') {
+                    setTimeout(initTurnstile, 100);
+                    return;
+                }
+                turnstile.render('#turnstile-container', {
+                    sitekey: '0x4AAAAAADF3EDMEB2Rbqpba',
+                    theme: 'dark',
+                    callback: function(token) {
+                        turnstileToken = token;
+                        document.getElementById('generate-code').disabled = false;
+                    },
+                    'expired-callback': function() {
+                        turnstileToken = null;
+                        document.getElementById('generate-code').disabled = true;
+                    },
+                    'error-callback': function() {
+                        turnstileToken = null;
+                        document.getElementById('generate-code').disabled = true;
+                    }
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', initTurnstile);
+
+            document.getElementById('generate-code').addEventListener('click', () => {
+                const output = document.getElementById('code-result');
+                if (!turnstileToken) {
+                    output.textContent = "please complete the verification first!";
+                    return;
+                }
+                output.textContent = "generating...";
+                fetch('https://toyhousecodes.aishuhariharan123.workers.dev/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ turnstileToken })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        output.textContent = data.error;
+                    } else if (data.code) {
+                        output.textContent = `awesome! here's a code: ${data.code} *please note that if the code is left unused, i may add it back into the code pool. you can always come back and generate another!`;
+                    } else {
+                        output.textContent = "No codes left right now!! Check back another time.";
+                    }
+                    // reset turnstile after use
+                    turnstileToken = null;
+                    document.getElementById('generate-code').disabled = true;
+                    turnstile.reset();
+                })
+                .catch(err => {
+                    console.error("Error fetching code:", err);
+                    output.textContent = "Something went wrong! Try again l8r";
+                });
+            });
+        })();
+        </script>
     </body>
-</html> 
-
-
-
-
-
-
-
-
-
-
-
-
-
+</html>
