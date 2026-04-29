@@ -24,10 +24,14 @@
         const len = suggText.value.length;
         charCount.textContent = `${len} / 500`;
         charCount.classList.toggle('over', len >= 490);
-        suggSubmit.disabled = len === 0 || len > 500;
+        // note: disabled state is also controlled by turnstile in submission.html inline script
+        if (len === 0 || len > 500) suggSubmit.disabled = true;
     });
 
     suggSubmit.addEventListener('click', async () => {
+        const token = window._suggTurnstileToken;
+        if (!token) return;
+
         suggSubmit.disabled = true;
         boxScene.classList.add('submitting');
         suggMsg.textContent = 'sending it in...';
@@ -36,7 +40,10 @@
             const r = await fetch(`${WORKER}/submit/suggestion`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ suggestion: suggText.value.trim() })
+                body: JSON.stringify({
+                    suggestion: suggText.value.trim(),
+                    turnstileToken: token
+                })
             });
             const d = await r.json();
             if (d.ok) {
@@ -47,6 +54,7 @@
                 charCount.textContent = '0 / 500';
                 formWrap.style.display = 'none';
                 boxHint.textContent = 'sent! thank you!';
+                window._suggTurnstileToken = null;
                 setTimeout(() => {
                     boxScene.classList.remove('submitted');
                     boxScene.style.cursor = 'default';
@@ -58,6 +66,8 @@
             boxScene.classList.remove('submitting');
             suggMsg.textContent = `something went wrong: ${e.message} :(`;
             suggSubmit.disabled = false;
+            window._suggTurnstileToken = null;
+            if (typeof turnstile !== 'undefined') turnstile.reset();
         }
     });
 
@@ -71,15 +81,17 @@
     const fanartMsg    = document.getElementById('fanart-msg');
 
     let selectedFile = null;
+    window._selectedFile = null;
 
     function handleFile(file) {
         if (!file) return;
         selectedFile = file;
+        window._selectedFile = file;
         fileName.textContent = file.name;
         const url = URL.createObjectURL(file);
         dropPreview.src = url;
         dropPreview.style.display = 'block';
-        checkFanartReady();
+        if (window._checkFanartReady) window._checkFanartReady();
     }
 
     fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
@@ -92,13 +104,10 @@
         handleFile(e.dataTransfer.files[0]);
     });
 
-    creditName.addEventListener('input', checkFanartReady);
-
-    function checkFanartReady() {
-        fanartSubmit.disabled = !selectedFile || !creditName.value.trim();
-    }
-
     fanartSubmit.addEventListener('click', async () => {
+        const token = window._fanartTurnstileToken;
+        if (!token || !selectedFile) return;
+
         fanartSubmit.disabled = true;
         fanartMsg.textContent = 'uploading...';
 
@@ -107,6 +116,7 @@
         fd.append('creditName', creditName.value.trim());
         fd.append('message', document.getElementById('fanart-message').value.trim());
         fd.append('websiteLink', document.getElementById('website-link').value.trim());
+        fd.append('turnstileToken', token);
 
         try {
             const r = await fetch(`${WORKER}/submit/fanart`, { method: 'POST', body: fd });
@@ -114,19 +124,24 @@
             if (d.ok) {
                 fanartMsg.textContent = "received!! it'll appear in the gallery below once i've approved it!";
                 selectedFile = null;
+                window._selectedFile = null;
                 fileInput.value = '';
                 fileName.textContent = '';
                 dropPreview.style.display = 'none';
                 creditName.value = '';
                 document.getElementById('fanart-message').value = '';
                 document.getElementById('website-link').value = '';
+                window._fanartTurnstileToken = null;
                 fanartSubmit.disabled = true;
+                if (typeof turnstile !== 'undefined') turnstile.reset();
             } else {
                 throw new Error(d.error || 'unknown error');
             }
         } catch (e) {
             fanartMsg.textContent = `something went wrong: ${e.message}`;
             fanartSubmit.disabled = false;
+            window._fanartTurnstileToken = null;
+            if (typeof turnstile !== 'undefined') turnstile.reset();
         }
     });
 

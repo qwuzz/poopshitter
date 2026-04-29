@@ -269,3 +269,53 @@ header h2 {
     }
   
   }
+  
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    background: rgba(180, 0, 0, 0.92);
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(6px);
+    padding: 8px 20px;
+    font-family: 'Century Gothic', sans-serif;
+}
+
+.bottom-bar-link {
+    color: white;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.bottom-bar-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.bottom-bar-admin {
+    font-size: 0.7rem;
+    opacity: 0.45;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+}
+
+.bottom-bar-admin:hover {
+    opacity: 0.75;
+}
+
+body {
+    padding-bottom: 40px;
+}
