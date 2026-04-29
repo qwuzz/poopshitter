@@ -278,7 +278,6 @@ header h2 {
     z-index: 1500;
     width: 100%;
     box-sizing: border-box;
-    transform: none;
     align-self: auto;
     flex-shrink: 0;
     order: 999;
@@ -288,7 +287,6 @@ header h2 {
     gap: 24px;
     background: rgba(180, 0, 0, 0.92);
     border-top: 2px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(6px);
     padding: 8px 20px;
     font-family: 'Century Gothic', sans-serif;
 }
