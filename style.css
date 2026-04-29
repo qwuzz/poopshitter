@@ -275,7 +275,13 @@ header h2 {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 500;
+    z-index: 1500;
+    width: 100%;
+    box-sizing: border-box;
+    transform: none;
+    align-self: auto;
+    flex-shrink: 0;
+    order: 999;
     display: flex;
     align-items: center;
     justify-content: center;
