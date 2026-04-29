@@ -278,9 +278,6 @@ header h2 {
     z-index: 1500;
     width: 100%;
     box-sizing: border-box;
-    align-self: auto;
-    flex-shrink: 0;
-    order: 999;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -289,6 +286,7 @@ header h2 {
     border-top: 2px solid rgba(255, 255, 255, 0.3);
     padding: 8px 20px;
     font-family: 'Century Gothic', sans-serif;
+    flex: 0 0 auto;
 }
 
 .bottom-bar-link {
@@ -321,5 +319,5 @@ header h2 {
 }
 
 body {
-    padding-bottom: 40px;
+    padding-bottom: 60px;
 }
