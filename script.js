@@ -1,7 +1,12 @@
-document.getElementById('menu-toggle').addEventListener('click', () => {
-    const links = document.getElementById('nav-links');
-    links.classList.toggle('visible');
-})
+const menuToggle = document.getElementById('menu-toggle');
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+        const links = document.getElementById('nav-links');
+        if (links) {
+            links.classList.toggle('visible');
+        }
+    });
+}
 
 if(document.getElementById('generate-code')) {
     document.getElementById('generate-code').addEventListener('click', () => {
