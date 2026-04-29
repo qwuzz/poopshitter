@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHANGELOG!!</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <style>
+        .changelog-page {
+            width: 100%;
+            max-width: 720px; 
+            margin: 0 auto;
+            padding-bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+    
+            .cl-entry {
+                background: #ff0000;
+                border: 3px solid white;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+    
+            .cl-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 18px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+    
+            .cl-version {
+                font-size: 1rem;
+                font-weight: bold;
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+    
+            .cl-date {
+                font-size: 0.78rem;
+                color: white;
+                opacity: 0.65;
+                font-style: italic;
+            }
+    
+            .cl-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 3px 9px;
+                border-radius: 20px;
+                font-size: 0.72rem;
+                font-weight: bold;
+                color: white;
+                border: 1.5px solid rgba(255,255,255,0.5);
+            }
+            .cl-tag-new     { background: #27ae60; }
+            .cl-tag-fix     { background: #2980b9; }
+            .cl-tag-update  { background: #8e44ad; }
+            .cl-tag-security { background: #c0392b; border-color: white; }
+    
+            .cl-body {
+                padding: 0 18px 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+    
+            .cl-item {
+                color: white;
+                font-size: 0.88rem;
+                line-height: 1.55;
+                display: flex;
+                gap: 10px;
+                align-items: flex-start;
+            }
+    
+            .cl-item i {
+                margin-top: 3px;
+                flex-shrink: 0;
+                font-size: 0.78rem;
+                opacity: 0.8;
+            }
+    
+            .cl-divider {
+                border: none;
+                border-top: 1.5px solid rgba(255,255,255,0.2);
+                margin: 8px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="menu">
+        <button id="menu-toggle">☰ menu</button>
+        <ul id="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="invite.html">Free Toyhouse Codes</a></li>
+            <li><a href="submission.html">Fanart/Video Suggestions</a></li>
+            <li><a href="tos.html">Terms of Service</a></li>
+            <li><a href="commissions.html">Commissions</a></li>
+            <li><a href="queue.html">Queue</a></li>
+        </ul>
+    </nav>
+
+    <main class="changelog-page">
+        <div class="intro-box">
+            <header>
+                <h1>CHANGELOG</h1>
+                <h2>new stuff added to the site + bug fixes + etc! ^_^</h2>
+            </header>
+        </div>
+        <!-- new entry template: 
+        <div class="cl-entry">
+            <div class="cl-header">
+                <div class="cl-version">
+                    <span>title</span>
+                    <span class="cl-tag cl-tag-new">new</span>
+                </div>
+                <span class="cl-date">Month DD, YYYY</span>
+            </div>
+            <div class="cl-body">
+                <div class="cl-item"><i class="fa-solid fa-plus"></i><span>thing you added</span></div>
+                <div class="cl-item"><i class="fa-solid fa-wrench"></i><span>thing you fixed</span></div>
+            </div>
+        </div>
+        -->
+
+        <div class="cl-entry">
+            <div class="cl-header">
+                <div class="cl-version">
+                    <span>changelog page</span>
+                    <span class="cl-tag cl-tag-new">new</span>
+                </div>
+                <span class="cl-date">April 29, 2026</span>
+            </div>
+            <div class="cl-body">
+                <div class="cl-item"><i class="fa-solid fa-plus"></i><span>added this changelog page!</span></div>
+            </div>
+        </div>
+        
+
+        <div class="changelog-page">
+            <div class="cl-entry">
+                <div class="cl-header">
+                    <div class="cl-version">
+                        <span>bot protection</span>
+                        <span class="cl-tag cl-tag-security"><i class="fa-solid fa-shield-halved"></i> security</span>
+                        <span class="cl-tag cl-tag-new">new</span>
+                    </div>
+                    <span class="cl-date">April 29, 2026</span>
+                    <div class="cl-body">
+                        <div class="cl-item"><i class="fa-solid fa-shield-halved"></i> added captcha to the code generator, suggestion box, and fanart submission form</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <div class="bottom-bar">
+        <a href="changelog.html" class="bottom-bar-link"><i class="fa-solid fa-clock-rotate-left"></i> changelog</a>
+        <a href="admin.html" class="bottom-bar-link bottom-bar-admin">admin</a>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
