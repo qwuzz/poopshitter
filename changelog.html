@@ -1,102 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHANGELOG!!</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>CHANGELOG</title>
+    <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
     <style>
         .changelog-page {
             width: 100%;
-            max-width: 720px; 
+            max-width: 720px;
             margin: 0 auto;
             padding-bottom: 80px;
             display: flex;
             flex-direction: column;
             gap: 16px;
-    
-            .cl-entry {
-                background: #ff0000;
-                border: 3px solid white;
-                border-radius: 8px;
-                overflow: hidden;
-            }
-    
-            .cl-header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 12px 18px;
-                gap: 10px;
-                flex-wrap: wrap;
-            }
-    
-            .cl-version {
-                font-size: 1rem;
-                font-weight: bold;
-                color: white;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-    
-            .cl-date {
-                font-size: 0.78rem;
-                color: white;
-                opacity: 0.65;
-                font-style: italic;
-            }
-    
-            .cl-tag {
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-                padding: 3px 9px;
-                border-radius: 20px;
-                font-size: 0.72rem;
-                font-weight: bold;
-                color: white;
-                border: 1.5px solid rgba(255,255,255,0.5);
-            }
-            .cl-tag-new     { background: #27ae60; }
-            .cl-tag-fix     { background: #2980b9; }
-            .cl-tag-update  { background: #8e44ad; }
-            .cl-tag-security { background: #c0392b; border-color: white; }
-    
-            .cl-body {
-                padding: 0 18px 14px;
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-            }
-    
-            .cl-item {
-                color: white;
-                font-size: 0.88rem;
-                line-height: 1.55;
-                display: flex;
-                gap: 10px;
-                align-items: flex-start;
-            }
-    
-            .cl-item i {
-                margin-top: 3px;
-                flex-shrink: 0;
-                font-size: 0.78rem;
-                opacity: 0.8;
-            }
-    
-            .cl-divider {
-                border: none;
-                border-top: 1.5px solid rgba(255,255,255,0.2);
-                margin: 8px 0;
-            }
+        }
+
+        .cl-section-label {
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            opacity: 0.6;
+            padding: 0 4px;
+            margin-top: 8px;
+        }
+
+        .cl-entry {
+            background: #ff0000;
+            border: 3px solid white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cl-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cl-version {
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cl-date {
+            font-size: 0.78rem;
+            color: white;
+            opacity: 0.65;
+            font-style: italic;
+        }
+
+        .cl-body {
+            padding: 0 18px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .cl-item {
+            color: white;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .cl-item i {
+            margin-top: 3px;
+            flex-shrink: 0;
+            font-size: 0.78rem;
+            opacity: 0.8;
+        }
+
+        .cl-planned {
+            background: transparent;
+            border: 3px solid rgba(255, 255, 255, 0.35);
+            border-radius: 8px;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cl-planned-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            opacity: 0.75;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cl-planned-title i {
+            font-size: 0.85rem;
+        }
+
+        .cl-planned-item {
+            color: white;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            opacity: 0.7;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .cl-planned-item i {
+            margin-top: 3px;
+            flex-shrink: 0;
+            font-size: 0.78rem;
+        }
+
+        .cl-planned-note {
+            color: white;
+            font-size: 0.75rem;
+            opacity: 0.45;
+            font-style: italic;
+            margin-top: 4px;
         }
     </style>
 </head>
-
 <body>
     <nav class="menu">
         <button id="menu-toggle">☰ menu</button>
@@ -106,64 +141,61 @@
             <li><a href="submission.html">Fanart/Video Suggestions</a></li>
             <li><a href="tos.html">Terms of Service</a></li>
             <li><a href="commissions.html">Commissions</a></li>
-            <li><a href="queue.html">Queue</a></li>
+            <li><a href="queue.html">Commission Queue</a></li>
         </ul>
     </nav>
 
-    <main class="changelog-page">
+    <main class="main-content">
         <div class="intro-box">
             <header>
                 <h1>CHANGELOG</h1>
-                <h2>new stuff added to the site + bug fixes + etc! ^_^</h2>
+                <h2>stuff i've added or bugs i've fixed on the site! :3 also upcoming plans/ideas</h2>
             </header>
         </div>
-        <!-- new entry template: 
-        <div class="cl-entry">
-            <div class="cl-header">
-                <div class="cl-version">
-                    <span>title</span>
-                    <span class="cl-tag cl-tag-new">new</span>
-                </div>
-                <span class="cl-date">Month DD, YYYY</span>
-            </div>
-            <div class="cl-body">
-                <div class="cl-item"><i class="fa-solid fa-plus"></i><span>thing you added</span></div>
-                <div class="cl-item"><i class="fa-solid fa-wrench"></i><span>thing you fixed</span></div>
-            </div>
-        </div>
-        -->
-
-        <div class="cl-entry">
-            <div class="cl-header">
-                <div class="cl-version">
-                    <span>changelog page</span>
-                    <span class="cl-tag cl-tag-new">new</span>
-                </div>
-                <span class="cl-date">April 29, 2026</span>
-            </div>
-            <div class="cl-body">
-                <div class="cl-item"><i class="fa-solid fa-plus"></i><span>added this changelog page!</span></div>
-            </div>
-        </div>
-        
 
         <div class="changelog-page">
+
+            <!-- RECENT UPDATES -->
+            <div class="cl-section-label">changelog</div>
+
+            <div class="cl-entry">
+                <div class="cl-header">
+                    <div class="cl-version">
+                        <span>new changelog page + footer</span>
+                    </div>
+                    <span class="cl-date">April 29, 2026</span>
+                </div>
+                <div class="cl-body">
+                    <div class="cl-item"><i class="fa-solid fa-circle-plus"></i><span>added this changelog page!</span></div>
+                </div>
+            </div>
+
             <div class="cl-entry">
                 <div class="cl-header">
                     <div class="cl-version">
                         <span>bot protection</span>
-                        <span class="cl-tag cl-tag-security"><i class="fa-solid fa-shield-halved"></i> security</span>
-                        <span class="cl-tag cl-tag-new">new</span>
                     </div>
                     <span class="cl-date">April 29, 2026</span>
-                    <div class="cl-body">
-                        <div class="cl-item"><i class="fa-solid fa-shield-halved"></i> added captcha to the code generator, suggestion box, and fanart submission form</div>
-                    </div>
+                </div>
+                <div class="cl-body">
+                    <div class="cl-item"><i class="fa-solid fa-shield-halved"></i><span>added captcha to the code generator, suggestion box, and fanart submission form to prevent bot attacks</span></div>
                 </div>
             </div>
+
+            <!-- PLANNED FEATURES -->
+            <div class="cl-section-label" style="margin-top: 8px;">coming...uh...sometime?</div>
+
+            <div class="cl-planned">
+                <div class="cl-planned-title">
+                    <i class="fa-solid fa-road"></i> planned features!
+                </div>
+                <div class="cl-planned-item"><i class="fa-solid fa-shirt"></i><span>merch page! i plan to make a page with merch listings, starting with paper stuff like posters and stickers probably. payment will be handled onsite and i will ship out to you from my home!</span></div>
+                <div class="cl-planned-item"><i class="fa-solid fa-user"></i><span>sign-in/account system! i want to allow users to make their own poopshitter accounts so they can view past orders (of commissions or of merch) and, if they want, join a pinglist for when new commission slots open or when new merch drops</span></div>
+                <div class="cl-planned-item"><i class="fa-solid fa-comment-dots"></i><span>discussion board! i want to make the site more interactive so i thought it would be cool if after making accounts, ppl can talk to each other about random stuff...this will be way into the future tho!</span></div>
+            </div>
+
         </div>
     </main>
-
 
     <div class="bottom-bar">
         <a href="changelog.html" class="bottom-bar-link"><i class="fa-solid fa-clock-rotate-left"></i> changelog</a>
@@ -171,5 +203,5 @@
     </div>
 
     <script src="script.js"></script>
-
 </body>
+</html>
