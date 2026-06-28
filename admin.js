@@ -26,8 +26,7 @@
     const loginBtn     = document.getElementById('google-login-btn');
     const logoutBtn    = document.getElementById('logout-btn');
 
-    let commToken   = sessionStorage.getItem('admin_token_comm');
-    let fanartToken = sessionStorage.getItem('admin_token_fanart');
+    let commToken = sessionStorage.getItem('admin_token_comm');
 
     async function verifyToken(worker, token) {
         try {
@@ -46,46 +45,28 @@
             history.replaceState({}, '', '/admin.html');
             const redirect = `${location.origin}/admin.html`;
 
-            const [commRes, fanartRes] = await Promise.all([
-                fetch(`${COMM_WORKER}/admin/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, redirect_uri: redirect })
-                }),
-                fetch(`${FANART_WORKER}/admin/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code, redirect_uri: redirect })
-                }),
-            ]);
+            const commRes = await fetch(`${COMM_WORKER}/admin/auth`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, redirect_uri: redirect })
+            });
 
             if (commRes.ok) {
                 const d = await commRes.json();
                 commToken = d.token;
                 sessionStorage.setItem('admin_token_comm', commToken);
-            }
-            if (fanartRes.ok) {
-                const d = await fanartRes.json();
-                fanartToken = d.token;
-                sessionStorage.setItem('admin_token_fanart', fanartToken);
-            }
-
-            if (!commToken && !fanartToken) {
+            } else {
                 showLogin('login failed — please try again.');
                 return;
             }
         }
 
-        const [commValid, fanartValid] = await Promise.all([
-            commToken   ? verifyToken(COMM_WORKER,   commToken)   : Promise.resolve(false),
-            fanartToken ? verifyToken(FANART_WORKER, fanartToken) : Promise.resolve(false),
-        ]);
+        const commValid = commToken ? await verifyToken(COMM_WORKER, commToken) : false;
 
-        if (commValid || fanartValid) {
+        if (commValid) {
             showAdmin();
         } else {
             sessionStorage.removeItem('admin_token_comm');
-            sessionStorage.removeItem('admin_token_fanart');
             showLogin();
         }
     }
@@ -113,8 +94,7 @@
 
     logoutBtn.addEventListener('click', () => {
         sessionStorage.removeItem('admin_token_comm');
-        sessionStorage.removeItem('admin_token_fanart');
-        commToken = fanartToken = null;
+        commToken = null;
         showLogin();
     });
 
@@ -246,7 +226,7 @@
 
     async function loadFanart() {
         const r = await fetch(`${FANART_WORKER}/admin/fanart`, {
-            headers: { 'Authorization': `Bearer ${fanartToken}` }
+            headers: { 'Authorization': `Bearer ${commToken}` }
         });
         const d = await r.json();
         const pending = (d.fanart || []).filter(f => !f.approved);
@@ -278,7 +258,7 @@
         const msg = document.getElementById(`fanart-msg-${id.replace(':', '-')}`);
         const r = await fetch(`${FANART_WORKER}/admin/fanart/approve`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fanartToken}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${commToken}` },
             body: JSON.stringify({ id })
         });
         if (r.ok) {
@@ -292,7 +272,7 @@
         const msg = document.getElementById(`fanart-msg-${id.replace(':', '-')}`);
         const r = await fetch(`${FANART_WORKER}/admin/fanart/reject`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fanartToken}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${commToken}` },
             body: JSON.stringify({ id })
         });
         if (r.ok) {
@@ -306,7 +286,7 @@
 
     async function loadSuggestions() {
         const r = await fetch(`${FANART_WORKER}/admin/suggestions`, {
-            headers: { 'Authorization': `Bearer ${fanartToken}` }
+            headers: { 'Authorization': `Bearer ${commToken}` }
         });
         const d = await r.json();
         const unseen = (d.suggestions || []).filter(s => !s.seen);
@@ -329,7 +309,7 @@
         const msg = document.getElementById(`sugg-msg-${id.replace(':', '-')}`);
         const r = await fetch(`${FANART_WORKER}/admin/suggestions/seen`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${fanartToken}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${commToken}` },
             body: JSON.stringify({ id })
         });
         if (r.ok) {
