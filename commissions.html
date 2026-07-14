@@ -91,10 +91,6 @@
         .field-group textarea { resize: vertical; min-height: 80px; }
         .field-group select:focus, .field-group input:focus, .field-group textarea:focus { outline: 3px solid #ffd0d0; }
 
-        .anim-check { display: none; flex-direction: row; align-items: center; gap: 8px; color: white; font-size: 0.88rem; font-weight: bold; background: rgba(255,255,255,0.15); border: 2px solid white; border-radius: 6px; padding: 10px 14px; }
-        .anim-check input[type=checkbox] { width: 16px; height: 16px; accent-color: white; }
-        .anim-check .anim-price-note { font-size: 0.8rem; opacity: 0.85; margin-left: 4px; }
-
         .price-preview { background: white; color: #ff0000; border-radius: 6px; padding: 10px 14px; font-weight: bold; font-size: 0.95rem; text-align: center; display: none; }
 
         .payment-info, .contact-info { display: none; flex-direction: column; gap: 5px; }
@@ -186,10 +182,11 @@
                     <p class="desc">larger icon on a 1000x1000 canvas! will have cleaner lines, and be less chunky, so it won't have that pixel-y look.</p>
                     <div class="price-row">
                         <span class="price-tag">static — $24</span>
-                        <span class="price-tag anim">animated — $56</span>
+                        <span class="price-tag anim">animated (tweened) — $36</span>
+                        <span class="price-tag anim">animated (frame-by-frame) — $56</span>
                     </div>
                     <div class="example-grid">
-                        <div class="placeholder"><img src="https://f2.toyhou.se/file/f2-toyhou-se/images/116316750_Dgva7lUL0v0Ofn3.gif?1772922625" alt="example"/></div>
+                        <div class="placeholder"><img src="https://images.artfight.net/attack/dazhoXQG85m4TUt7lse52QnhR32604Lfem5XBR15JcHllFcujJ0uIf6Zumws.gif?t=1783647717" alt="example"/></div>
                         <div class="placeholder"><img src="https://f2.toyhou.se/file/f2-toyhou-se/images/117418124_C4P3jnrR0YKwoGE.png" alt="example"/></div>
                         <div class="placeholder"><img src="https://f2.toyhou.se/file/f2-toyhou-se/images/118323282_404iWAQDsw4QBtV.gif?1776103382" alt="example"/></div>
                     </div>
@@ -287,7 +284,7 @@
                         <option value="">— select a type —</option>
                         <option value="small-pixel-icon" data-price="8" data-anim-price="18" data-animable="true">Small Pixel Icon ($8)</option>
                         <option value="pixel-icon" data-price="12" data-anim-price="30" data-animable="true">Pixel Icon ($12)</option>
-                        <option value="regular-icon" data-price="24" data-anim-price="56" data-animable="true">Regular Icon ($24)</option>
+                      <option value="regular-icon" data-price="24" data-tweened-price="36" data-anim-price="56" data-animable="true">Regular Icon ($24)</option>
                         <option value="feral-pagedoll" data-price="16" data-anim-price="42" data-animable="true">Feral Pixel Pagedoll ($16)</option>
                         <option value="anthro-pagedoll" data-price="21" data-anim-price="56" data-animable="true">Anthro Pixel Pagedoll ($21)</option>
                         <option value="ref-sheet" data-price="32" data-animable="false">Reference Sheet ($32)</option>
@@ -296,10 +293,12 @@
                     </select>
                 </div>
 
-                <!-- animated checkbox (shown conditionally) -->
-                <div class="anim-check" id="anim-check">
-                    <input type="checkbox" id="anim-toggle"/>
-                    <label for="anim-toggle">Add animation? <span class="anim-price-note" id="anim-price-note"></span></label>
+                <!-- animation type (shown conditionally) -->
+                <div class="field-group" id="anim-type-group" style="display:none;">
+                    <label for="anim-type">Animation *</label>
+                    <select id="anim-type">
+                        <option value="none">No animation</option>
+                    </select>
                 </div>
 
                 <!-- background preference (shown for icon/pagedoll types) -->
