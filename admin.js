@@ -191,7 +191,9 @@
     function renderCommCard(c) {
         const icon  = STATUS_ICONS[c.status] ?? 'fa-circle';
         const label = STATUS_LABELS[c.status] ?? c.status;
-        const animTag = c.animated ? ' (animated)' : '';
+        const animTag = c.animationType === 'tweened' ? ' (tweened)'
+              : c.animationType === 'full'     ? ' (full animation)'
+              : c.animated ? ' (animated)' : '';
         const payLabel = c.paymentMethod === 'paypal' ? 'PayPal email'
                        : c.paymentMethod === 'cashapp' ? 'CashApp'
                        : 'Venmo';

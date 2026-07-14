@@ -1,11 +1,12 @@
 (() => {
     // --- commission data ---
     const ANIMABLE = ['small-pixel-icon','pixel-icon','regular-icon','feral-pagedoll','anthro-pagedoll'];
+    const TWEENABLE = ['regular-icon'];
     const BG_TYPES  = ['small-pixel-icon','pixel-icon','regular-icon','feral-pagedoll','anthro-pagedoll'];
     const PRICES = {
         'small-pixel-icon':   { base: 8,  anim: 18 },
         'pixel-icon':         { base: 12, anim: 30 },
-        'regular-icon':       { base: 24, anim: 56 },
+        'regular-icon':       { base: 24, tweened: 36,anim: 56 },
         'feral-pagedoll':     { base: 16, anim: 42 },
         'anthro-pagedoll':    { base: 21, anim: 56 },
         'ref-sheet':          { base: 32 },
@@ -15,9 +16,6 @@
 
     // --- element refs ---
     const commType      = document.getElementById('comm-type');
-    const animCheck     = document.getElementById('anim-check');
-    const animToggle    = document.getElementById('anim-toggle');
-    const animPriceNote = document.getElementById('anim-price-note');
     const bgGroup       = document.getElementById('bg-pref-group');
     const pricePreview  = document.getElementById('price-preview');
     const paymentSel    = document.getElementById('payment-method');
@@ -61,31 +59,47 @@
         [...document.getElementById('comm-form').querySelectorAll('select,input,textarea,button')].forEach(el => el.disabled = true);
     }
 
-    // --- commission type change ---
+    const animTypeGroup  = document.getElementById('anim-type-group');
+    const animTypeSelect = document.getElementById('anim-type');
+    
+    
+    // commission type change
     commType.addEventListener('change', () => {
         const v = commType.value;
         const p = PRICES[v];
 
-        animToggle.checked = false;
-        animCheck.style.display = ANIMABLE.includes(v) ? 'flex' : 'none';
-        bgGroup.style.display   = BG_TYPES.includes(v)  ? 'flex' : 'none';
+        bgGroup.style.display = BG_TYPES.includes(v) ? 'flex' : 'none';
 
-        if (p) {
-            animPriceNote.textContent = `+$${p.anim - p.base} (total: $${p.anim})`;
-            updatePrice();
+        if (ANIMABLE.includes(v)) {
+            animTypeGroup.style.display = 'flex';
+            let opts = `<option value="none">No animation ($${p.base})</option>`;
+            if (TWEENABLE.includes(v) && p.tweened) {
+                opts += `<option value="tweened">Tweened animation ($${p.tweened})</option>`;
+            }
+            opts += `<option value="full">Full frame animation ($${p.anim})</option>`;
+            animTypeSelect.innerHTML = opts;
+            animTypeSelect.value = 'none';
         } else {
-            pricePreview.style.display = 'none';
+            animTypeGroup.style.display = 'none';
         }
+
+        p ? updatePrice() : (pricePreview.style.display = 'none');
         updateSubmit();
     });
 
-    animToggle.addEventListener('change', updatePrice);
+
+    animTypeSelect.addEventListener('change', updatePrice);
 
     function updatePrice() {
         const v = commType.value;
         const p = PRICES[v];
         if (!p) return;
-        const total = (animToggle.checked && p.anim) ? p.anim : p.base;
+        let total = p.base;
+        if (ANIMABLE.includes(v)) {
+            const a = animTypeSelect.value;
+            if (a === 'tweened' && p.tweened) total = p.tweened;
+            else if (a === 'full') total = p.anim;
+        }
         pricePreview.textContent = `estimated total: $${total}`;
         pricePreview.style.display = 'block';
     }
@@ -156,12 +170,18 @@
         submitMsg.textContent = 'sending...';
 
         const v = commType.value;
-        const isAnim = animToggle.checked && ANIMABLE.includes(v);
-        const total  = isAnim ? PRICES[v].anim : PRICES[v].base;
+        const p = PRICES[v];
+        const animVal = ANIMABLE.includes(v) ? animTypeSelect.value : 'none';
+
+        let total = p.base;
+        let isAnim = false;
+        if (animVal === 'tweened' && p.tweened) { total = p.tweened; isAnim = true; }
+        else if (animVal === 'full')             { total = p.anim;    isAnim = true; }
 
         const payload = {
             commissionType: commType.options[commType.selectedIndex].text,
             animated: isAnim,
+            animationType: animVal,
             background: document.getElementById('bg-pref').value || 'n/a',
             estimatedPrice: total,
             characterName: document.getElementById('char-name').value.trim(),
@@ -186,7 +206,7 @@
                 submitMsg.textContent = "you're in!! 🎉 i'll reach out to you soon via ur chosen contact method. keep an eye on the commission queue page!";
                 submitMsg.style.color = 'white';
                 document.getElementById('comm-form').querySelectorAll('select,input,textarea').forEach(el => el.value = '');
-                animCheck.style.display = 'none';
+                animTypeGroup.style.display = 'none';
                 pricePreview.style.display = 'none';
                 loadSlots();
             } else {
