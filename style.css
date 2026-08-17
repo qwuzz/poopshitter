@@ -287,26 +287,50 @@ header h2 {
         align-items: center;
         padding: 1rem;
         padding-bottom: 80px;
+        overflow-x: hidden;
     }
 
     .sidebar-left,
     .sidebar-right {
         width: 90%;
-        max-width: 300px;
+        max-width: 360px;
         height: auto;
         order: 2;
+        padding-top: 10px;
     }
 
+    /* make main content fully responsive on small screens */
     .main-content {
         width: 100%;
+        max-width: 100%;
         padding: 1rem;
         text-align: center;
         order: 1;
+        box-sizing: border-box;
+    }
+
+    .main-content > * {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    /* place the visitor counter inline in the sidebar flow and center it */
+    #visitor-counter {
+        position: static;
+        top: auto;
+        left: auto;
+        margin: 6px auto 0 auto;
+        display: inline-block;
     }
 
     .box, .header-box {
         width: 100%;
         margin-bottom: 1rem;
+    }
+
+    /* make thumbnails smaller on mobile so rows wrap earlier */
+    .blinkies img, .stamps img {
+        max-width: 28vw;
     }
 }
 
